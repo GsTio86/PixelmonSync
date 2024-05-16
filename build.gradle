@@ -4,6 +4,9 @@ buildscript {
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
         mavenCentral()
     }
+    dependencies {
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+    }
 }
 
 plugins {
@@ -13,11 +16,13 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
+apply plugin: 'org.spongepowered.mixin'
+
 group = mod_group_id
 version = mod_version
 
 base {
-    archivesName = mod_id
+    archivesName = mod_name
 }
 
 java {
@@ -26,6 +31,12 @@ java {
 
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
+}
+
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
+
+    config "${mod_id}.mixins.json"
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
@@ -45,7 +56,10 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly 'pixelmon:Pixelmon-1.16.5-9.1.11-server:9.1.11'
+
     shadow 'com.zaxxer:HikariCP:5.1.0'
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 shadowJar {
@@ -57,18 +71,6 @@ shadowJar {
 
     relocate('com.zaxxer', 'me.gt86.sync.shade.hikari')
     relocate('org.slf4j', 'me.gt86.sync.shade.slf4j')
-    relocate('com.envyful.api', 'me.gt86.sync.shade.envy.api')
-    relocate('org.bstats', 'me.gt86.sync.shade.bstats')
-    relocate('io.netty', 'me.gt86.sync.shade.netty')
-    relocate('io.lettuce', 'me.gt86.sync.shade.lettuce')
-    relocate('com.cronutils', 'me.gt86.sync.shade.cronutils')
-    relocate('com.sun.el', 'me.gt86.sync.shade.sun.el')
-    relocate('org.reactivestreams', 'me.gt86.sync.shade.reactivestreams')
-    relocate('reactor', 'me.gt86.sync.shade.reactor')
-    relocate('org.apache.commons.jexl', 'me.gt86.sync.shade.jexl3')
-    relocate('google.protobuf', 'me.gt86.sync.shade.protobuf')
-    relocate('jakarta.el', 'me.gt86.sync.shade.jakarta.el')
-    relocate('org.xerial.snappy', 'me.gt86.sync.shade.snappy')
 
     exclude "com/google/**"
     exclude "javax/**"
