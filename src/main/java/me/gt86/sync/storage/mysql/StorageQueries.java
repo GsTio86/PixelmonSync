@@ -44,7 +44,7 @@ public class StorageQueries {
 
     public static void createStorage(Connection con,PokemonStorage storage, UUID uuid) throws SQLException {
         String nbt = storage.writeToNBT(new CompoundNBT()).toString();
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(nbt.getBytes());
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(nbt.getBytes(StandardCharsets.UTF_8));
         try (PreparedStatement statement = con.prepareStatement(createStorage(storage))) {
             statement.setString(1, uuid.toString());
             statement.setBlob(2, byteArrayInputStream);
@@ -74,7 +74,7 @@ public class StorageQueries {
 
     public static void updateStorage(Connection con, PokemonStorage storage, UUID uuid) throws SQLException {
         try (PreparedStatement statement = con.prepareStatement(updateStorage(storage))) {
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(storage.writeToNBT(new CompoundNBT()).toString().getBytes());
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(storage.writeToNBT(new CompoundNBT()).toString().getBytes(StandardCharsets.UTF_8));
             statement.setBlob(1, byteArrayInputStream);
             statement.setString(2, uuid.toString());
             statement.executeUpdate();

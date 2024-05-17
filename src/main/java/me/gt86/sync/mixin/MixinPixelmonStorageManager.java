@@ -2,6 +2,7 @@ package me.gt86.sync.mixin;
 
 import com.pixelmonmod.pixelmon.api.economy.BankAccountManager;
 import com.pixelmonmod.pixelmon.api.storage.*;
+import me.gt86.sync.PixelmonSync;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -36,6 +37,7 @@ public abstract class MixinPixelmonStorageManager implements StorageManager, Ban
     @Overwrite
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (!(event.getPlayer() instanceof ServerPlayerEntity)) return;
         UUID uuid = event.getPlayer().getUUID();
         if (this.parties.containsKey(uuid)) {
             this.parties.get(uuid).tryUpdatePlayerName();
@@ -55,14 +57,17 @@ public abstract class MixinPixelmonStorageManager implements StorageManager, Ban
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onLoadPlayerFile(PlayerEvent.LoadFromFile event) {
+        if (!(event.getPlayer() instanceof ServerPlayerEntity)) return;
         UUID uuid = event.getPlayer().getUUID();
         PlayerPartyStorage partyStorage = this.getSaveAdapter().load(uuid, PlayerPartyStorage.class);
         if (partyStorage != null) {
             this.parties.put(uuid, partyStorage);
+            PixelmonSync.sendDebugMessage("Loaded party for " + uuid);
         }
         PCStorage pc = this.getSaveAdapter().load(uuid, PCStorage.class);
         if (pc != null) {
             this.pcs.put(uuid, pc);
+            PixelmonSync.sendDebugMessage("Loaded PC for " + uuid);
         }
     }
 
@@ -73,9 +78,13 @@ public abstract class MixinPixelmonStorageManager implements StorageManager, Ban
         this.playersWithSyncedPCs.remove(playerUUID);
         PlayerPartyStorage party = this.parties.remove(playerUUID);
         PCStorage pc = this.pcs.remove(playerUUID);
-        if (party != null)
+        if (party != null) {
             this.getSaveAdapter().save(party);
-        if (pc != null)
+            PixelmonSync.sendDebugMessage("Saved party for " + playerUUID);
+        }
+        if (pc != null) {
             this.getSaveAdapter().save(pc);
+            PixelmonSync.sendDebugMessage("Saved PC for " + playerUUID);
+        }
     }
 }

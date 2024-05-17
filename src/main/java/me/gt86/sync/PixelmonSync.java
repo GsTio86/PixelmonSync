@@ -76,4 +76,10 @@ public class PixelmonSync {
         PixelmonStorageManager storageManager = (PixelmonStorageManager) event.getStorageManager();
         storageManager.setSaveAdapter(new MySqlStorageSaveAdapter());
     }
+
+    public static void sendDebugMessage(String message) {
+        if (Config.isDebug()) {
+            LOGGER.info(message);
+        }
+    }
 }
