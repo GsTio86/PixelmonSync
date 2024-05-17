@@ -36,18 +36,33 @@ public abstract class MixinPixelmonStorageManager implements StorageManager, Ban
     @Overwrite
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (!(event.getPlayer() instanceof ServerPlayerEntity player)) return;
-        UUID playerUUID = player.getUUID();
-        PlayerPartyStorage partyStorage = this.getSaveAdapter().load(playerUUID, PlayerPartyStorage.class);
-        if (partyStorage != null) {
-            partyStorage.tryUpdatePlayerName();
-            this.parties.put(playerUUID, partyStorage);
+        UUID uuid = event.getPlayer().getUUID();
+        if (this.parties.containsKey(uuid)) {
+            this.parties.get(uuid).tryUpdatePlayerName();
+        } else {
+            getParty(uuid);
         }
-        PCStorage pc = this.getSaveAdapter().load(playerUUID, PCStorage.class);
+        if (this.pcs.containsKey(uuid)) {
+            PCStorage pc = this.pcs.get(uuid);
+            pc.setPlayer(uuid, event.getPlayer().getName().getString());
+            for (ServerPlayerEntity player : pc.getPlayersToUpdate()) {
+                this.initializePCForPlayer(player, pc);
+            }
+        } else {
+            getPCForPlayer(uuid);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onLoadPlayerFile(PlayerEvent.LoadFromFile event) {
+        UUID uuid = event.getPlayer().getUUID();
+        PlayerPartyStorage partyStorage = this.getSaveAdapter().load(uuid, PlayerPartyStorage.class);
+        if (partyStorage != null) {
+            this.parties.put(uuid, partyStorage);
+        }
+        PCStorage pc = this.getSaveAdapter().load(uuid, PCStorage.class);
         if (pc != null) {
-            pc.setPlayer(playerUUID, player.getName().getString());
-            this.initializePCForPlayer(player, pc);
-            this.pcs.put(playerUUID, pc);
+            this.pcs.put(uuid, pc);
         }
     }
 
