@@ -58,6 +58,8 @@ dependencies {
     compileOnly 'pixelmon:Pixelmon-1.16.5-9.1.11-server:9.1.11'
 
     shadow 'com.zaxxer:HikariCP:5.1.0'
+    shadow 'com.mysql:mysql-connector-j:8.0.33'
+    shadow 'org.mariadb.jdbc:mariadb-java-client:3.3.3'
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
