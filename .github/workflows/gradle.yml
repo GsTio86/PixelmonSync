@@ -50,12 +50,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Generate dependency graph
-      run: ./gradlew generateDependencyGraph
-      env:
-        GRADLE_PROJECT_PATH: .
-
-    - name: Submit dependency graph
-      uses: gradle/actions/dependency-submission@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+    - name: Set up Gradle
+      uses: gradle/gradle-build-action@v2
       with:
-        gradle-project-path: .
+        gradle-version: '8.4'
+
+    - name: Generate and submit dependency graph
+      run: gradle dependencies --configuration compileClasspath
