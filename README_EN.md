@@ -2,7 +2,7 @@
 
 A mod that syncs Pixelmon player data across servers.
 
-[English](./README_EN.md) | [繁體中文](./README_ZH_TW.md)
+[English](./README.md) | [繁體中文](./README_ZH_TW.md)
 
 ## Overview
 
