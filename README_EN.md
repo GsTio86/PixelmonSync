@@ -2,6 +2,8 @@
 
 A mod that syncs Pixelmon player data across servers.
 
+[English](./README_EN.md) | [繁體中文](./README_ZH_TW.md)
+
 ## Overview
 
 PixelmonSync is designed to synchronize player data across multiple Pixelmon servers. It utilizes MySQL to store player data, ensuring consistency across servers. Data operations occur only when a player logs in, logs out, or executes the save command.
