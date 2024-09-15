@@ -10,7 +10,7 @@ PixelmonSync is designed to synchronize player data across multiple Pixelmon ser
 
 ## Compatibility
 
-Currently supports Pixelmon 1.16.5 9.1.11 and Java 11+.
+Currently supports Pixelmon 1.16.5 9.1.12 and Java 11+.
 
 ## Installation
 
