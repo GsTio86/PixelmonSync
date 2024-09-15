@@ -6,7 +6,7 @@ PixelmonSync 用於同步多個 Pixelmon 伺服器的玩家資料。它使用 My
 
 ### 相容性
 
-目前僅支持 Pixelmon 1.16.5 9.1.11 和 Java 11+。
+目前僅支持 Pixelmon 1.16.5 9.1.12 和 Java 11+。
 
 ### 安裝方式
 
