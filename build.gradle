@@ -55,9 +55,9 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    compileOnly 'pixelmon:Pixelmon-1.16.5-9.1.11-server:9.1.11'
+    compileOnly 'pixelmon:Pixelmon-1.16.5-9.1.13-server:9.1.13'
 
-    shadow 'com.zaxxer:HikariCP:5.1.0'
+    shadow 'com.zaxxer:HikariCP:6.2.1'
     shadow 'com.mysql:mysql-connector-j:8.0.33'
     shadow 'org.mariadb.jdbc:mariadb-java-client:3.3.3'
 
