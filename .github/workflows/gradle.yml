@@ -22,7 +22,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Set up Gradle
-      uses: gradle/gradle-build-action@v4
+      uses: gradle/gradle-build-action@v2
       with:
         gradle-version: '8.4'
       
@@ -36,7 +36,7 @@ jobs:
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
     - name: Archive build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: PixelmonSync
         path: build/libs/*.jar
@@ -58,7 +58,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Set up Gradle
-      uses: gradle/gradle-build-action@v4
+      uses: gradle/gradle-build-action@v2
       with:
         gradle-version: '8.4'
 
