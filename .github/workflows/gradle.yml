@@ -1,4 +1,4 @@
-name: Java CI with Gradle
+name: Java CI with Gradle and Release
 
 on:
   push:
@@ -29,6 +29,12 @@ jobs:
     - name: Build with Gradle
       run: gradle build
 
+    - name: Get Version from gradle.properties
+      id: get_version
+      run: |
+        VERSION=$(grep "^version=" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+
     - name: Archive build artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -36,7 +42,8 @@ jobs:
         path: build/libs/*.jar
         retention-days: 15
 
-  dependency-submission:
+  release:
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -55,5 +62,25 @@ jobs:
       with:
         gradle-version: '8.4'
 
-    - name: Generate and submit dependency graph
-      run: gradle dependencies --configuration compileClasspath
+    - name: Get Version from gradle.properties
+      id: get_version
+      run: |
+        VERSION=$(grep "^version=" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: PixelmonSync
+        path: build/libs/
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ env.VERSION }}
+        release_name: Release v${{ env.VERSION }}
+        draft: false
+        prerelease: false
+        files: build/libs/*.jar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
